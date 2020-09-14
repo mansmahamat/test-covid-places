@@ -2,6 +2,8 @@ import React, {useState, useRef} from 'react';
 import ReactMapGL, {Marker, FlyToInterpolator, Popup, GeolocateControl} from 'react-map-gl';
 import useSupercluster from 'use-supercluster';
 import testPlace from '../data/csvjson.json';
+import hospital from '../assets/img/hospital.png';
+import InfoCenter from './InfoCenter';
 
 function MapData() {
     // Setup Map
@@ -25,6 +27,12 @@ function MapData() {
       type: "Feature",
       properties: { cluster: false, ID: places.ID},
       adresse : places.adresse,
+      tel : places.tel_rdv,
+      rs : places.rs,
+      horaire: places.horaire,
+      public : places.public,
+      check_rdv : places.check_rdv,
+      web_rdv : places.web_rdv,
       geometry: {
         type: "Point",
         coordinates: [
@@ -74,7 +82,7 @@ function MapData() {
                           latitude={latitude}
                           longitude={longitude}>
   
-                    <div className="bg-red-700 rounded-full py-4 px-4 text-top text-white font-black cursor-pointer" 
+                    <div className="bg-green-700 rounded-full py-4 px-4 text-top text-white font-black cursor-pointer" 
                           style={{ width: `${45 + pointCount / points.length * 20}px`,height: `${45 + pointCount / points.length * 20}px` }}
                           onClick={() => {
                             const expansionZoom = Math.min(supercluster.getClusterExpansionZoom(cluster.id), 20 );
@@ -101,13 +109,13 @@ function MapData() {
               return(  <Marker key={Math.random()}
                 longitude={longitude}
                 latitude={latitude}>
-                 <button className="bg-green-600 px-2 py-2"
+                 <button className=" px-2 py-2"
                           onClick={(e) => {
                             e.preventDefault();
                             setSelectedPlace(cluster);
                           }}>
-                    00
-  
+                <img src={hospital} alt="centre" />    
+                          
                  </button>
        </Marker>)
             } )}
@@ -118,9 +126,13 @@ function MapData() {
                 onClose={() => {
                   setSelectedPlace(null);
                 }}>
-                  <div>
-                    {selectedPlace.adresse}
-                  </div>
+                  <InfoCenter rs={selectedPlace.rs}
+                              adresse={selectedPlace.adresse}
+                              tel={selectedPlace.tel}
+                              horaire={selectedPlace.horaire}
+                              public={selectedPlace.public}
+                              check_rdv={selectedPlace.check_rdv}
+                              web_rdv={selectedPlace.web_rdv} />
                 </Popup>
             ) : null }
   
